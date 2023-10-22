@@ -2,7 +2,18 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  res.send({ message: "Hello" })
+  res.setHeader("X-Timestamp", Date.now())
+  let message = req.query.message
+  const lang = req.headers["X-lang"]
+  if (message === "") {
+    res.status(400)
+    if (lang === "en") {
+      message = "message is empty"
+    } else {
+      message = "messageの値が空です。"
+    }
+  }
+  res.send({ message })
 })
 
 router.use(express.json())
@@ -20,3 +31,8 @@ module.exports = router
 //   body: JSON.stringify({ message: "こんにちは" }),
 //   headers: { "Content-type": "application/json" }
 // })
+
+// const res = await fetch('http://site.exmaple:3000/api?message=', {
+//   headers: { "X-Lang": "en" }
+// })
+// await res.json()
